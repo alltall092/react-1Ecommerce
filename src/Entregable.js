@@ -20,7 +20,7 @@ const search=()=>{
 return(<div className="search">
 <h1>Rick and Morty Wiki</h1>
 
-    <input type="text" onChange={(e)=>setBuscar(e.target.value)} value={buscar} style={{marginBottom:'30px'}}/>
+    <input type="text" className="input" onChange={(e)=>setBuscar(e.target.value)} value={buscar} style={{marginBottom:'30px'}}/>
 <button onClick={search}>Buscar</button>
 <br/>
 <h4>Residents</h4>

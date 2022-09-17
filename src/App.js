@@ -9,7 +9,8 @@ import Country from './Country';
 import './App.css';
 import Entregable from './Entregable';
 import Products from './Products';
-
+import ProductList from './ProductList';
+import UserList from './UserList';
 
 function App() {
   return (
@@ -18,7 +19,11 @@ function App() {
 <nav>
   
           <ul className="menu">``
-          
+           
+          <li>
+              <Link to="/">UserList</Link>
+
+            </li>
           <li>
               <Link to="lista">Lista</Link>
 
@@ -32,10 +37,13 @@ function App() {
               
             </li>
             <li>
-              <Link to="/">Entregable</Link>
+              <Link to="/entregable">Entregable</Link>
               
             </li>
-           
+            <li>
+              <Link to="/ProductList">ProductsList</Link>
+              
+            </li>
           </ul>
         </nav>
 
@@ -43,7 +51,9 @@ function App() {
         <Route path="lista" element={<Lista/>} />
         <Route path="products" element={<Products/>} />
         <Route path="country" element={<Country/>} />
-        <Route path="/" element={<Entregable/>} />
+        <Route path="entregable" element={<Entregable/>} />
+        <Route path="ProductList" element={<ProductList/>} />
+        <Route path="/" element={<UserList/>} />
         </Routes>
       
        
