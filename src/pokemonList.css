@@ -1,0 +1,33 @@
+.container-pokemon{
+    display:grid;
+    grid-template-rows:repeat(4,1fr);
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    background-color:#16213E;
+width:100%;
+
+
+}
+.search{
+    background-color:#16213E;
+    color:white;
+
+
+}
+.pokemon-item{
+    height:400px;
+    width: 300px;
+    border-radius:7px;
+    background-color:#0F3460;
+    color:white;
+  
+  
+
+
+}
+.input{
+width:60%;
+
+
+
+}

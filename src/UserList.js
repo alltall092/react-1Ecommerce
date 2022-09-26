@@ -1,18 +1,19 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import './UserList.css';
-
+import Spinner from 'react-bootstrap/Spinner';
 import FormItem from './FormItem';
 const UserList=()=>{
 const [user,setUser]=useState([])
 const[selectedUser,setSelectedUser]= useState(null)
+const [isloading,setIsloading]=useState(true)
 useEffect(() => {
 
     getUsers();
 }, [])
 const getUsers=()=>{
 
-axios.get("https://users-crud1.herokuapp.com/users/").then(res=>setUser(res.data))
+axios.get("https://users-crud1.herokuapp.com/users/").then(res=>setUser(res.data)).finally(()=>setIsloading(false))
 
 }
 const postUsers=(newUser)=>{
@@ -42,6 +43,9 @@ const deselectedUser=()=>setSelectedUser(null);
 
 
 return(<div className="container-user-3">
+{isloading?(
+  <Spinner animation="border" variant="primary" />
+):(<>
 <div className="container-user-2">
 <div className=" item-user2">
 <h1>users</h1>
@@ -49,7 +53,9 @@ return(<div className="container-user-3">
   <div className=" item-user2">
     
         <FormItem  UpateUsers={UpateUsers}  postUsers={postUsers} selectedUser={selectedUser} deselectedUser={deselectedUser} />
+       
       </div>
+
       </div>
       <div className="container-user">
     {user.map(p=>(
@@ -60,7 +66,7 @@ return(<div className="container-user-3">
           <i onClick={()=>SelecteUser(p)} className="fa fa-pencil" style={{color:"blue",fontSize:"30px",margin:"3px"}}></i>
           <i onClick={()=>DeleteUsers(p.id)} className="fa  fa-trash"  style={{color:"red",fontSize:"30px",margin:"3px"}}></i>
         </div>))}
-        </div>
+        </div></>)}
       
     
   

@@ -11,7 +11,13 @@ import Entregable from './Entregable';
 import Products from './Products';
 import ProductList from './ProductList';
 import UserList from './UserList';
-
+import About from './About';
+import Home from './Home';
+import Character from './Character';
+import UserInput from "./UserInput";
+import PokedexCard from "./PokedexCard";
+import PokedexDetalles from "./PokedexDetalles";
+import ProtectedRoutes from './ProtectedRoutes';
 function App() {
   return (
     <div className="App">
@@ -21,7 +27,7 @@ function App() {
           <ul className="menu">``
            
           <li>
-              <Link to="/">UserList</Link>
+              <Link to="userList">UserList</Link>
 
             </li>
           <li>
@@ -44,6 +50,19 @@ function App() {
               <Link to="/ProductList">ProductsList</Link>
               
             </li>
+            <li>
+              <Link to="/about">About</Link>
+              
+            </li>
+            <li>
+              <Link to="/character">Character</Link>
+              
+            </li>
+            <li>
+              <Link to="/">UserInput</Link>
+              
+            </li>
+            
           </ul>
         </nav>
 
@@ -53,7 +72,16 @@ function App() {
         <Route path="country" element={<Country/>} />
         <Route path="entregable" element={<Entregable/>} />
         <Route path="ProductList" element={<ProductList/>} />
-        <Route path="/" element={<UserList/>} />
+        <Route path="userList" element={<UserList/>} />
+        <Route path="about" element={<About/>} />
+        <Route path="home" element={<Home/>} />
+        <Route path="character" element={<Character/>} />
+        <Route path="character/:id" element={<Character/>} />
+
+        <Route path="/" element={<UserInput/>} />
+        <Route element={<ProtectedRoutes/>}/>
+            <Route path="pokedex"  element={<PokedexCard/>} />
+          <Route path="pokedex/:id"  element={<PokedexDetalles/>} />
         </Routes>
       
        

@@ -6,7 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 
 const FormItem=({UpateUsers,postUsers,selectedUser,deselectedUser})=>{
     const { register, handleSubmit, watch,reset, formState: { errors }, } = useForm();
-   
+   const [isvalid,setIsvalid]=useState(false);
 useEffect(() => {
   if(selectedUser){
 reset(selectedUser);
@@ -33,7 +33,7 @@ postUsers(data)
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
+const validar=()=>setIsvalid(!isvalid)
     const clear = () => {
       reset({
         first_name: "",
@@ -83,9 +83,17 @@ return(<div>
       <div className="-input-container">
       <label>Password</label>
       <br/>
-      <i class="fa fa-lock"></i>
-      <input  type="password" {...register("password",{ required: true })} />
-      {errors.password && <span style={{color:"red"}}>This field is required</span>}
+     
+      <div class="input-group mb-3">
+      <i class="fa fa-lock"></i> 
+  <input type={isvalid?'text':'password'}  {...register("password",{ required: true })} aria-describedby="basic-addon2"/>
+  <div class="input-group-append">
+    <span class="input-group-text" id="basic-addon2">{isvalid?(<><i className="fa fa-eye" onClick={validar}></i></>):(<><i className="fa fa-eye-slash" onClick={validar}></i></>)}</span>
+  </div>
+  {errors.password && <span style={{color:"red"}}>This field is required</span>}
+  </div>
+     
+   
       </div>
       <div className="-input-container">
       <label>Birthday</label>
