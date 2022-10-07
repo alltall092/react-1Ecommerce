@@ -1,0 +1,28 @@
+
+.login-item{
+    background:rgba(12, 228, 76, 0.158);
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    
+    }
+.username{
+width: 300px;;
+margin:0px;
+
+
+    }
+    .button{
+margin:5px;
+padding:10px;
+text-align:center;
+    }
+.password{
+margin-top:-15px;
+
+}

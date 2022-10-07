@@ -39,6 +39,25 @@ text-decoration:none;
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.modal{
+  -moz-transform: translateX(-200px);
+  -webkit-transform: translateX(-200px);
+  -o-transform: translateX(-100px);
+  -ms-transform: translateX(-200px);
+  transform: translateX(-200px);
+
+}
+.container-cart{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+
+}
+.item-cart{
+width:70px;
+
+
+}
 
 .App-link {
   color: #61dafb;
