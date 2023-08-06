@@ -2,7 +2,7 @@
     display: grid;
     padding: 1rem;
     grid-gap: 1rem;
-    grid-template-columns: repeat(5,1fr);
+    grid-template-columns: repeat(4,1fr);
     font-size: 5rem;
 
 
@@ -75,6 +75,15 @@ a{text-decoration:none;}
 .boton{
     margin-top:-190px;
     margin-left:110px;
+
+
+}
+.cart-item{
+  display: flex;
+  justify-content:end;
+  align-items:end;
+
+ 
 
 
 }

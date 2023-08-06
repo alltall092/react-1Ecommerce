@@ -9,7 +9,8 @@ import axios from "axios";
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 import './Product.css';
 const Product=()=>{
 const [search,setSearch]=useState("")
@@ -58,12 +59,13 @@ const navegar=(id)=>{
     return productId;
 
 }
-/*const addItem=(product)=>{
-product={
-quantity:1}
+const addItem=()=>{
+const product={
+  id:10,
+quantity:10}
   dispatch(postCart(product))
   
-  }*/
+  }
 console.log(categories)
 return(<div>
  <div className="col col-md-6" style={{position:"relative",left:"0" ,right:"0",margin:"auto"}}>
@@ -136,14 +138,34 @@ return(<div>
 </div>
 {prodFilter?.map((p)=>(
 <div className="product-item" key={p.id}>
+<Card style={{ width: '18rem' }}>
+<Card.Link onClick={()=>navegar(p.id)}>
 
-<img src={p.productImgs[0]} alt="imagenes"  id="imagenes" height="200" width="300"/>
-<hr/>
-<h6>{p.title}</h6>
-<p style={{fontSize:"14px"}}>price</p>
-<h6>{'USD$'+p.price}</h6>
-<Button variant="success" onClick={()=>navegar(p.id)} >Detalles</Button>
-<Button variant="success"  onClick={()=>dispatch(setItem(p))}>add to cart</Button>
+      <Card.Img variant="top" src={p.productImgs[0]} alt="imagenes"  id="imagenes" />
+      </Card.Link>
+      <Card.Body>
+        <Card.Title>{p.title}</Card.Title>
+       
+      </Card.Body>
+      <Card.Body>
+  <ListGroup><h4>{'USD$'+p.price}</h4> </ListGroup>
+      <ListGroup className="list-group-flush">
+      
+      <div className="cart-item">
+     
+      
+      
+     
+      
+      <Card.Link href="#"><Button variant="success" style={{borderRadius:"100%",width:"50px"}}  onClick={()=>dispatch(setItem(p))}><i className="fa fa-cart-plus" style={{color:"white",fontSize:"30px",margin:"0 auto",left:"0",right:"0",top:"0",bottom:"0"}}></i></Button></Card.Link>
+      </div>
+        </ListGroup>
+      </Card.Body>
+    </Card>
+
+
+
+
 </div>))}
     
 </div>

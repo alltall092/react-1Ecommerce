@@ -39,15 +39,21 @@ setCart:(state,action)=>{
 state.cart=action.payload
 
 },
+setItems:(state,action)=>{
+  state.item=action.payload
+  
+  },
+  
 setItem:(state,action)=>{
 const index=state.item.findIndex(x=>x.id===action.payload.id)
 if(index>=0){
 state.item[index].cantidad+=1
 
 }else{
-const addcart={...action.payload,cantidad:1}
+state.cantidad=1
+const addcart={...action.payload,cantidad:state.cantidad}
 state.item.push(addcart);
-localStorage.setItem("item",JSON.stringify(state.item))
+localStorage.setItem("items",JSON.stringify(state.item))
 
 }
 
@@ -67,24 +73,36 @@ element.cantidad=element.cantidad+1
 
 },
  decrement:(state,action)=>{
-  state.item.forEach(element =>{
-    if(state.product.id===action.payload){
-    if(element.cantidad>=1){
-    
-    element.cantidad=element.cantidad-1
-    }
-    }
-     })
+  const index=state.item.findIndex(x=>x.id===action.payload.id)
+  if(index>=0){
+  state.item[index].cantidad+=1
+  
+  }else{
+    const addcart={...action.payload,cantidad:1}
+
+
+  }
 },
 deleteItem:(state,action)=>{
  const fil=state.item.filter(x=>x.id !==action.payload.id);
+//const local=localStorage.removeItem("items", JSON.stringify(fil));
 return fil;
-}
+
+},
+setCantidad:(state,action)=>{
+state.cantidad=action.payload
+localStorage.setItem("items",JSON.stringify(state.item))
+
+
 
 }
 
 
+}
 });
+
+
+
 
 export  const getProducts=()=>dispatch=>{
     dispatch(setIsloading(true));
@@ -109,18 +127,18 @@ export const getCart = () =>(dispatch) => {
     .finally(() => dispatch(setIsloading(false)));
 };
 
-export const postCart = (product) => dispatch=> {
+export const postCart = (product) => (dispatch)=> {
   dispatch(setIsloading(true));
    axios
     .post("https://ecommerce-api-react.herokuapp.com/api/v1/cart",product,getConfig())
-    .then((res) => dispatch(getCart())).catch(error=>console.log(error.response))
+    .then(() => dispatch(getCart())).catch(error=>console.log(error.response))
     .finally(() => dispatch(setIsloading(false)));
 };
-export const PostsCart = () => dispatch=> {
+export const PostsCart = () => (dispatch)=> {
   dispatch(setIsloading(true));
    axios
     .post("https://ecommerce-api-react.herokuapp.com/api/v1/cart",{},getConfig())
-    .then((res) => dispatch(getCart([]))).catch(error=>console.log(error.response))
+    .then(() => dispatch(getCart([]))).catch(error=>console.log(error.response))
     .finally(() => dispatch(setIsloading(false)));
 };
 
@@ -128,5 +146,5 @@ export const PostsCart = () => dispatch=> {
 
 
 
-export const {setProduct,setItem,setIsloading,increment,decrement,deleteItem,setPurchase,setCart}=ShopingcartSlice.actions;
+export const {setProduct,setItem,setIsloading,increment,decrement, setCantidad,deleteItem,setItems,setPurchase,setCart}=ShopingcartSlice.actions;
 export default ShopingcartSlice.reducer

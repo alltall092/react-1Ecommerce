@@ -1,0 +1,13 @@
+.CartItem {
+    display: flex;
+    justify-content: space-between;
+  }
+  .CartItem div {
+    width: 25%;
+    text-align: left;
+    padding: 1em;
+  }
+  .CartItem .button {
+    margin:  0.5em;
+  }
+  

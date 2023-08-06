@@ -9,10 +9,11 @@ import { useForm } from "react-hook-form";
 import { useNavigate} from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
 
-const Login=()=>{
+const Login=({setIsLoggedin})=>{
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
 const navigate=useNavigate();
-  
+
+
 
 
 
@@ -20,18 +21,22 @@ const navigate=useNavigate();
 
 
     
-const onSubmit = (data) => {
+ const  onSubmit =  async (data) => {
        
-   axios.post(`https://ecommerce-api-react.herokuapp.com/api/v1/users/login`,data).then(res=>{
+    await axios.post(`https://ecommerce-api-react.herokuapp.com/api/v1/users/login`,data).then(res=>{
     <Alert variant="success">
     <Alert.Heading>you are login </Alert.Heading>
   </Alert>
    console.log(res.data)
-   localStorage.setItem("token",res.data.data.token)
-   navigate('/product')
+   localStorage.setItem("token",res.data.data.token);
+
+   console.log(res.data);
+   sessionStorage.setItem("auth",res.data.data.user.email);
+   setIsLoggedin(true)
+   navigate('/product');
   
   }).catch(error=>{
-if(error.response?.status===401){
+if(error.response?.status===400){
   <Alert variant="danger">
   <Alert.Heading>credencial invalid </Alert.Heading>
 </Alert>

@@ -2,23 +2,32 @@ import React, {useEffect,useState } from 'react';
 import {useSelector,useDispatch} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import './productDetail.css';
-import {getProducts,postCart,getCart }from './Shopingcart.slice';
-import { Carousel } from 'react-carousel-minimal';
-import {increment,setItem,decrement }from './Shopingcart.slice';
+import {getProducts,postCart,PostsCart,getCart}from './Shopingcart.slice';
+import {setItem }from './Shopingcart.slice';
 import { Button, Col, ListGroup, Row } from "react-bootstrap";
-const ProductDetail=()=>{
+import Carousel from 'react-bootstrap/Carousel';
+
+
+const ProductDetail=({updateQty})=>{
 
    const prod=useSelector((state)=>state.cart);
+   const [index, setIndex] = useState(0);
     const {id}=useParams();
     const dispatch=useDispatch();
-  
+    //const  [cantidad, setCantidad]=useState(1);
     const item=useSelector((state)=>state.cart.item);
+ const initialItems={item}
+ const initialState = JSON.parse(localStorage.getItem("items"));
+    const [items, setItems] = useState(initialState|| initialItems);
+   const [cantidad,setCantidad]= useState(1);
+
+
     useEffect(()=>{
    dispatch(getProducts())
    
     },[])
     const findProduct=prod.product?.find(p=>p.id===Number(id));
-const index=prod.product?.findIndex(x=>x.id>0);
+
     const data = [
       {
         image:findProduct?.productImgs[0],
@@ -69,50 +78,75 @@ const index=prod.product?.findIndex(x=>x.id>0);
       fontSize: '20px',
       fontWeight: 'bold',
     }
+ useEffect(()=>{
+
+dispatch(getCart())
+
+ },[])
+
+
+ 
+const counter=(id)=>{
+
+  updateQty(id,cantidad)
+  setCantidad(cantidad+1)
+
+}
+
+const decounter=(id)=>{
+  updateQty(id,cantidad)
+  setCantidad(cantidad-1)
+  
+  }
+  console.log(prod)
  
 
-  
-  
-
-
-
+  const handleSelect = (selectedIndex, e) => {
+    setIndex(selectedIndex);
+  };
 
 
 return(<div className="grid-container">
 
 <div className="grid-item">
-<div style={{ textAlign: "center" }}>
-        <div style={{
-          padding: "0 20px"
-        }}>
-          <Carousel
-            data={data}
-            time={2000}
-            width="400px"
-            height="200px"
-            captionStyle={captionStyle}
-            radius="10px"
-            slideNumber={true}
-            slideNumberStyle={slideNumberStyle}
-            captionPosition="bottom"
-            automatic={false}
-            dots={true}
-            pauseIconColor="white"
-            pauseIconSize="40px"
-            slideBackgroundColor="darkgrey"
-            slideImageFit="cover"
-            thumbnails={true}
-            thumbnailWidth="50px"
-            style={{
-              textAlign: "left",
-              maxWidth: "400px",
-              maxHeight: "200px",
-              margin: "40px auto",
-              backgroundSize:"100%"
-            }}
-          />
-        </div>
-      </div>
+<Carousel activeIndex={index} onSelect={handleSelect}>
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          src={findProduct?.productImgs[0]}
+          alt="First slide" style={{height:"300px"}}
+        />
+        <Carousel.Caption>
+        <h3>{findProduct?.title}</h3>
+          
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          src={findProduct?.productImgs[1]}
+          alt="Second slide" style={{height:"300px"}}
+        />
+
+        <Carousel.Caption>
+          <h3>{findProduct?.title}</h3>
+        
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          src={findProduct?.productImgs[2]}
+          alt="Third slide"
+        />
+
+        <Carousel.Caption>
+        <h3>{findProduct?.title}</h3>
+          
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
+      
 
 </div>
 <div className="grid-item">
@@ -126,10 +160,10 @@ return(<div className="grid-container">
 <div className="button">
 <h4 style={{marginLeft:"100px"}}>{findProduct?.price}</h4>
 <Button type="button" 
-className="Success" onClick={()=>dispatch(increment())}>+</Button>
-<input type="text" value={item[0]?.cantidad} style={{width:"30px"}}/>
+className="Success" onClick={()=>counter(findProduct.id)}>+</Button>
+<input type="text" value={cantidad} style={{width:"30px"}}/>
 <Button type="button" 
-className="Success" onClick={()=>dispatch(decrement())}>-</Button>
+className="Success" onClick={()=>decounter(findProduct.id)}>-</Button>
 
           
         

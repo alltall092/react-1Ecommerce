@@ -85,3 +85,15 @@ width:70px;
   40% { color:yellow  }
   100% { color:blue}
 }
+.auth-container{
+display:flex;
+flex-direction:row;
+justify-content:end;
+margin:6px 5px 6px 500px;
+
+
+}
+
+.fa{
+color:white;
+}

@@ -30,33 +30,76 @@ import Login from './Login';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import {useSelector,useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import Product  from './Product';
 import ProductDetail from './ProductDetail';
 import React, { useState,useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
+import CartItem from './CartItem';
 //import Modal from 'react-bootstrap/Modal';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import {increment,deleteItem,decrement }from './Shopingcart.slice';
+import CheckoutForm from './CheckoutForm';
 import Purchases from './Purchases'
 import  ProtectedRouter from './ProtectedRouter';
 //import {useNavigate} from 'react-router-dom';
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
 import Logout from './Logout';
+const stripePromise = loadStripe('pk_test_51IOB3XGuY2qOE3VYhvbFoZG7KU6BRcKFmU1F1728z4R7IxyjEkvWUc8p12n7DwRYAVotknCcA1n60jegA5k1goM900yVlfV8YM');
 function App({ name, ...props }) {
   const loading=useSelector((state)=>state.cart);
   const item=useSelector((state)=>state.cart.item);
-  const dispatch=useDispatch();
+  //const dispatch=useDispatch();
  const [show, setShow] = useState(false);
+ //const  [cantidad, setCantidad]=useState(1);
+ const initialItems={item}
+ const initialState = JSON.parse(localStorage.getItem("items"));
+ const [items, setItems] = useState(initialState|| initialItems);
+const auth=sessionStorage.getItem("auth");
+
+const [isLoggedin, setIsLoggedin] = useState(false);
  //const navigate=useNavigate();
+ useEffect(() => {
+  localStorage.setItem("items", JSON.stringify(items));
+}, [items]);
+
+
+
 
  const handleClose = () => setShow(false);
  const handleShow = () =>setShow(true);
+ const updateQty = (id, newQty) => {
+  const newItems = items.map((item) => {
+    if (item.id === id) {
+      return { ...item,cantidad: newQty };
+    }
+    return item;
+  });
+  setItems(newItems);
+};
+const remover=(id)=>{
+  
+  let items =JSON.parse(localStorage.getItem("items"));
+  items = items.filter((item) => item.id !== id);
+  localStorage.setItem("items", JSON.stringify(items));
+  if (items.length === 0) {
+    localStorage.removeItem("items");
+  }
 
-const getTotal=()=>{
-const finds=item.find(x=>x.id!==null)
-const total=finds?.price*finds?.cantidad;
-return total;
+  setItems(items)
+  
+
+
 }
+
+ const total=Array.isArray(items)?
+ items.reduce((total, item) => total + item.cantidad * item.price, 0)
+.toFixed(2):null;
+
+//const options = {
+  // passing the client secret obtained from the server
+  //clientSecret: 'sk_test_51IOB3XGuY2qOE3VYB3Cloc6sGDOpRvWZ2RdNIiw6OLqxaHB40wJ6iuzAtgE50Kfxl3Ac1uihPYjzeTcvtNNbXEcY00FL06W9kq',
+//};
 
 
 
@@ -72,14 +115,31 @@ return total;
     <Nav className="me-auto">
 
     
-      <Nav.Link className="text-light"  as={Link} to="/product">Products</Nav.Link>
+      <Nav.Link className="text-light"  as={Link} to="/product"><i class="fa fa-product-hunt"></i>Products</Nav.Link>
     
       <Nav.Link  className="text-light" as={Link} to="/purchases">Purcharses</Nav.Link>
   
       <Button variant="primary" onClick={handleShow}>
-        Cart
+      <i className="fa fa-cart-plus"></i>
       </Button>
-      <Logout/>
+    {auth!==null?(
+<div className="auth-container">
+
+<p style={{margin:"3px"}}><i class="fa fa-user"></i>{auth}</p>
+
+         <Logout setIsLoggedin={setIsLoggedin}/>
+      
+</div>
+):(<div className="auth-container">
+   
+
+         <Nav.Link  className="text-light" as={Link} to="/">Login</Nav.Link>
+  <Nav.Link  className="text-light" as={Link} to="/login">Registrar</Nav.Link>
+
+      </div>
+      )}
+
+   
   
     </Nav>
   </Navbar.Collapse>
@@ -89,43 +149,22 @@ return total;
 
       <Offcanvas show={show} onHide={handleClose} {...props} placement="end">
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+          <Offcanvas.Title>Shoppingcart</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-         
-        {item?.map((items)=>(
-            <div className="container-cart" key={item.id}>
-            <div className="item-cart">
-           
-            <img src={items.productImgs[0]} alt="imagenes"  id="imagenes" height="30" width="50"/>
-            <h6>{items.title}</h6>
-          </div>
-           <div className="item-cart">
-           <Button variant="primary" onClick={()=>dispatch(increment())}>
-            +
-          </Button>
-          <h4>{items.cantidad}</h4>
-          <Button variant="primary" onClick={()=>dispatch(decrement())}>
-            -
-          </Button>
-            </div>
-            <div className="item-cart">
-         <h4>{items.price}</h4>
-         <hr/>
+        <div>
+        {Array.isArray(items)?
+        items.map((item) => {
+      
+        return <CartItem key={item.id} {...item} updateQty={updateQty} remover={remover} />
+    
+        }):null}
+      <h2>Total: { total}</h2>
+</div>
         
-              </div>
-            <div className="item-cart">
-            <Button variant="primary"  onClick={()=>dispatch(deleteItem(items.id))}>
-            x
-          </Button>
-              </div>
-           
-            </div>
-          )
-            )}
-<h2>Total:{getTotal()}</h2>
-<br/>
-<Button>CheckOut</Button>
+ 
+      
+   
         </Offcanvas.Body>
       </Offcanvas>
 
@@ -153,8 +192,8 @@ return total;
         <Route path="purchases" element={<Purchases/>} />
         </Route>
         <Route path="product" element={<Product/>} />
-        <Route path="product/:id" element={<ProductDetail/>} />
-        <Route path="/" element={<Login/>} />
+        <Route path="product/:id" element={<ProductDetail updateQty={updateQty}/>} />
+        <Route path="/" element={<Login setIsLoggedin={setIsLoggedin}/>} />
 
  
             <Route path="pokedex"  element={<PokedexCard/>} />
